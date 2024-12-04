@@ -15,6 +15,9 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+
+    // Apache Commons Text for generating password.
+    implementation("org.apache.commons:commons-text:1.12.0")
 }
 
 tasks.test {
