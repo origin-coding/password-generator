@@ -5,8 +5,7 @@ package com.origincoding
 import org.apache.commons.text.RandomStringGenerator
 
 inline fun <T> MutableList<T>.addAllIf(
-    vararg element: T,
-    condition: () -> Boolean
+    vararg element: T, condition: () -> Boolean
 ) {
     if (condition()) {
         this.addAll(element)
@@ -14,14 +13,17 @@ inline fun <T> MutableList<T>.addAllIf(
 }
 
 /**
- * 生成密码
+ * 构造随机字符生成器
  *
  * @param minLength 密码最小长度
  * @param maxLength 密码最大长度
  * @param characterOptions 字符集选项
  * @param count 生成密码数量
  *
+ * @return 构造出的RandomStringGenerator
+ *
  * @see CharacterOptions
+ * @see RandomStringGenerator
  */
 internal fun buildGenerator(
     minLength: Int, maxLength: Int, characterOptions: CharacterOptions, count: Int
@@ -66,10 +68,7 @@ internal fun buildGenerator(
  */
 internal fun passwordIsValid(password: String, characterOptions: CharacterOptions): Boolean {
     return password.let {
-        (it.any { char -> char.isUpperCase() } || !characterOptions.uppercase) &&
-                (it.any { char -> char.isLowerCase() } || !characterOptions.lowercase) &&
-                (it.any { char -> char.isDigit() } || !characterOptions.digits) &&
-                (it.any { char -> !char.isLetterOrDigit() } || !characterOptions.specialChars)
+        (it.any { char -> char.isUpperCase() } || !characterOptions.uppercase) && (it.any { char -> char.isLowerCase() } || !characterOptions.lowercase) && (it.any { char -> char.isDigit() } || !characterOptions.digits) && (it.any { char -> !char.isLetterOrDigit() } || !characterOptions.specialChars)
     }
 }
 
@@ -118,3 +117,29 @@ fun generatePassword(
         passwordIsValid(it, characterOptions)
     }.first()
 }
+
+/**
+ * 生成多个固定长度的密码
+ *
+ * @param length 密码长度，要求在8~32之间
+ * @param characterOptions 字符集选项
+ * @param count 密码数量
+ *
+ * @return 生成的密码列表
+ */
+fun generatePassword(
+    length: Int = 16, characterOptions: CharacterOptions = CharacterOptions(), count: Int = 1
+): List<String> = generatePassword(length, length, characterOptions, count)
+
+/**
+ * 生成一个指定长度的密码
+ *
+ * @param length 密码长度，要求在8~32之间
+ * @param characterOptions 字符集选项
+ *
+ * @return 生成的单个密码
+ */
+fun generatePassword(
+    length: Int = 16, characterOptions: CharacterOptions = CharacterOptions()
+): String = generatePassword(length, length, characterOptions)
+
