@@ -5,10 +5,11 @@ plugins {
     kotlin("jvm") version "2.0.21"
     kotlin("plugin.allopen") version "2.0.21"
     id("org.jetbrains.kotlinx.benchmark") version "0.4.12"
+    `maven-publish`
 }
 
 group = "com.origincoding"
-version = "1.0-SNAPSHOT"
+version = "1.0.0"
 
 repositories {
     // Kotlinx Benchmark's runtime cannot be found in Aliyun's Maven repository.
@@ -62,5 +63,15 @@ benchmark {
             this as JvmBenchmarkTarget
             jmhVersion = "1.21"
         }
+    }
+}
+
+// 附带源码Jar包，如果需要发布Java Doc Jar包，在代码块里添加：withJavadocJar()
+java { withSourcesJar() }
+
+// 这里发布到Maven Local，因为没有Maven账号
+publishing {
+    publications {
+        create<MavenPublication>("bootJava") { from(components["java"]) }
     }
 }
